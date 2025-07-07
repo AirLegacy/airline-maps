@@ -1,20 +1,21 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Airline Route Map</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <style>
-    #map{height:100vh;width:100%}
-    .hub-marker{background:#ffeb3b;width:16px;height:16px;border-radius:50%;border:2px solid #333;display:block}
-    .airport-marker{background:#2196f3;width:12px;height:12px;border-radius:50%;border:2px solid #333;display:block}
-    .legend{position:absolute;bottom:20px;left:20px;background:#fff;padding:8px 12px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.3);font:14px Arial,sans-serif;z-index:1000}
-    .legend .box{display:inline-block;width:14px;height:14px;margin-right:6px;border:2px solid #333;border-radius:50%}
-    .hub-box{background:#ffeb3b}
-    .dest-box{background:#2196f3}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Airline Route Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<style>
+ #map{height:100vh;width:100%}
+ .hub-marker   {background:#ffeb3b;width:16px;height:16px;border:2px solid #333;border-radius:50%;display:block}
+ .airport-marker{background:#2196f3;width:12px;height:12px;border:2px solid #333;border-radius:50%;display:block}
+ .legend{position:absolute;bottom:20px;left:20px;background:#fff;padding:8px 12px;border-radius:8px;
+         box-shadow:0 0 8px rgba(0,0,0,.3);font:14px Arial,sans-serif;z-index:1000}
+ .legend .box{display:inline-block;width:14px;height:14px;margin-right:6px;border:2px solid #333;border-radius:50%}
+ .hub-box{background:#ffeb3b}.dest-box{background:#2196f3}
+</style>
 </head>
 <body>
 <div id="map"></div>
@@ -22,85 +23,100 @@
   <div><span class="box hub-box"></span>yellow = hubs</div>
   <div><span class="box dest-box"></span>blue = destinations</div>
 </div>
+
 <script>
-const map=L.map('map').setView([53.3498,-6.2603],3);
+const map=L.map('map').setView([45,-20],3);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(map);
 
+/* hubs */
 const hubs={
-  Dublin:{coords:[53.3498,-6.2603],icao:'EIDW'},
-  Zurich:{coords:[47.4581,8.5550],icao:'LSZH'},
+  Dublin :{coords:[53.3498,-6.2603],icao:'EIDW'},
+  Zurich :{coords:[47.4581, 8.5550],icao:'LSZH'},
   Orlando:{coords:[28.5383,-81.3792],icao:'KMCO'},
-  Newark:{coords:[40.7357,-74.1724],icao:'KEWR'},
+  Newark :{coords:[40.7357,-74.1724],icao:'KEWR'},
   Seattle:{coords:[47.6062,-122.3321],icao:'KSEA'}
 };
-Object.entries(hubs).forEach(([n,d])=>L.marker(d.coords,{icon:L.divIcon({className:'hub-marker'})}).addTo(map).bindPopup(`<b>${n} (Hub)</b><br>ICAO: ${d.icao}`));
+Object.entries(hubs).forEach(([n,d])=>L.marker(d.coords,{icon:L.divIcon({className:'hub-marker'})})
+     .addTo(map).bindPopup(`<b>${n} (Hub)</b><br>ICAO: ${d.icao}`));
 
+/* Dublin short‑haul destinations */
 const dublinDest=[
-  {name:'Edinburgh',coords:[55.9533,-3.1883],icao:'EGPH',ac:'B737-800 / A320'},
-  {name:'London',coords:[51.5074,-0.1278],icao:'EGLL',ac:'B737-800 / A320'},
-  {name:'Paris',coords:[48.8566,2.3522],icao:'LFPG',ac:'B737-800 / A320'},
-  {name:'Munich',coords:[48.1351,11.5820],icao:'EDDM',ac:'B737-800 / A320'},
-  {name:'Frankfurt',coords:[50.1109,8.6821],icao:'EDDF',ac:'B737-800 / A320'},
-  {name:'Hamburg',coords:[53.5511,9.9937],icao:'EDDH',ac:'B737-800 / A320'},
-  {name:'Berlin',coords:[52.52,13.4050],icao:'EDDB',ac:'B737-800 / A320'},
-  {name:'Nice',coords:[43.7102,7.2620],icao:'LFMN',ac:'B737-800 / A320'},
-  {name:'Madrid',coords:[40.4168,-3.7038],icao:'LEMD',ac:'B737-800 / A320'},
-  {name:'Malaga',coords:[36.7213,-4.4214],icao:'LEMG',ac:'B737-800 / A320'},
-  {name:'Faro',coords:[37.0194,-7.9304],icao:'LPFR',ac:'B737-800 / A320'},
-  {name:'Lanzarote',coords:[28.9489,-13.6130],icao:'GCRR',ac:'A320 / A321'},
-  {name:'Tenerife South',coords:[28.0444,-16.5725],icao:'GCTS',ac:'A320 / A321'},
-  {name:'Rome',coords:[41.9028,12.4964],icao:'LIRF',ac:'B737-800 / A320'},
-  {name:'Copenhagen',coords:[55.6761,12.5683],icao:'EKCH',ac:'B737-800 / A320'},
-  {name:'Stockholm',coords:[59.3293,18.0686],icao:'ESSA',ac:'B737-800 / A320'},
-  {name:'Geneva',coords:[46.2044,6.1432],icao:'LSGG',ac:'B737-800 / A320'}
+  {n:'Edinburgh',c:[55.9533,-3.1883],i:'EGPH',ac:'B737-800 / A320'},
+  {n:'London',c:[51.5074,-0.1278],i:'EGLL',ac:'B737-800 / A320'},
+  {n:'Paris',c:[48.8566,2.3522],i:'LFPG',ac:'B737-800 / A320'},
+  {n:'Munich',c:[48.1351,11.5820],i:'EDDM',ac:'B737-800 / A320'},
+  {n:'Frankfurt',c:[50.1109,8.6821],i:'EDDF',ac:'B737-800 / A320'},
+  {n:'Hamburg',c:[53.5511,9.9937],i:'EDDH',ac:'B737-800 / A320'},
+  {n:'Berlin',c:[52.52,13.4050],i:'EDDB',ac:'B737-800 / A320'},
+  {n:'Nice',c:[43.7102,7.2620],i:'LFMN',ac:'B737-800 / A320'},
+  {n:'Madrid',c:[40.4168,-3.7038],i:'LEMD',ac:'B737-800 / A320'},
+  {n:'Malaga',c:[36.7213,-4.4214],i:'LEMG',ac:'B737-800 / A320'},
+  {n:'Faro',c:[37.0194,-7.9304],i:'LPFR',ac:'B737-800 / A320'},
+  {n:'Lanzarote',c:[28.9489,-13.6130],i:'GCRR',ac:'A320 / A321'},
+  {n:'Tenerife South',c:[28.0444,-16.5725],i:'GCTS',ac:'A320 / A321'},
+  {n:'Rome',c:[41.9028,12.4964],i:'LIRF',ac:'B737-800 / A320'},
+  {n:'Copenhagen',c:[55.6761,12.5683],i:'EKCH',ac:'B737-800 / A320'},
+  {n:'Stockholm',c:[59.3293,18.0686],i:'ESSA',ac:'B737-800 / A320'},
+  {n:'Geneva',c:[46.2044,6.1432],i:'LSGG',ac:'B737-800 / A320'}
 ];
 dublinDest.forEach(d=>{
-  L.marker(d.coords,{icon:L.divIcon({className:'airport-marker'})}).addTo(map).bindPopup(`<b>${d.name}</b><br>ICAO: ${d.icao}<br>Aircraft: ${d.ac}`);
-  L.polyline([hubs.Dublin.coords,d.coords],{color:'red',weight:2}).addTo(map);
+  L.marker(d.c,{icon:L.divIcon({className:'airport-marker'})})
+   .addTo(map).bindPopup(`<b>${d.n}</b><br>ICAO: ${d.i}<br>Aircraft: ${d.ac}`);
+  L.polyline([hubs.Dublin.coords,d.c],{color:'red',weight:2}).addTo(map);
 });
 
-const domRoutes=[
-  {from:'Orlando',to:[33.7490,-84.3880],name:'Atlanta',icao:'KATL',ac:'B737-800 / A320',color:'#37bbed'},
-  {from:'Orlando',to:[25.7617,-80.1918],name:'Miami',icao:'KMIA',ac:'B737-800 / A320',color:'#37bbed'},
-  {from:'Orlando',to:hubs.Newark.coords,name:'Newark',icao:'KEWR',ac:'A320 / B737-800',color:'#37bbed'},
-  {from:'Orlando',to:hubs.Seattle.coords,name:'Seattle',icao:'KSEA',ac:'A321 / B737-800',color:'#37bbed'},
-  {from:'Orlando',to:[34.0522,-118.2437],name:'Los Angeles',icao:'KLAX',ac:'A321 / B737-800',color:'#37bbed'},
-  {from:'Orlando',to:[32.8998,-97.0403],name:'Dallas Fort Worth',icao:'KDFW',ac:'B737-800 / A320',color:'#37bbed'},
-  {from:'Orlando',to:[43.6532,-79.3832],name:'Toronto',icao:'CYYZ',ac:'A320 / A321',color:'#37bbed'},
-  {from:'Orlando',to:[41.9742,-87.9073],name:"Chicago O'Hare",icao:'KORD',ac:'A320 / A321 / B737-800',color:'#37bbed'},
-  {from:'Newark',to:hubs.Orlando.coords,name:'Orlando',icao:'KMCO',ac:'A320 / A321 / B737-800',color:'orange'},
-  {from:'Newark',to:hubs.Seattle.coords,name:'Seattle',icao:'KSEA',ac:'A320 / A321',color:'orange'},
-  {from:'Newark',to:[41.9742,-87.9073],name:"Chicago O'Hare",icao:'KORD',ac:'A320 / B737-800',color:'orange'},
-  {from:'Newark',to:[37.7749,-122.4194],name:'San Francisco',icao:'KSFO',ac:'A321 / B737-800',color:'orange'},
-  {from:'Newark',to:[32.8998,-97.0403],name:'Dallas Fort Worth',icao:'KDFW',ac:'A320 / B737-800',color:'orange'},
-  {from:'Seattle',to:[37.7749,-122.4194],name:'San Francisco',icao:'KSFO',ac:'A320',color:'green'},
-  {from:'Seattle',to:[26.1224,-80.1373],name:'Fort Lauderdale',icao:'KFLL',ac:'A321 / B737-800',color:'green'},
-  {from:'Seattle',to:[41.9742,-87.9073],name:"Chicago O'Hare",icao:'KORD',ac:'A321 / B737-800',color:'green'}
+/* domestic‑coloured US‑hub routes */
+const dom=[
+  {f:'Orlando',t:[33.7490,-84.3880],n:'Atlanta',i:'KATL',ac:'B737-800 / A320',col:'#37bbed'},
+  {f:'Orlando',t:[25.7617,-80.1918],n:'Miami',i:'KMIA',ac:'B737-800 / A320',col:'#37bbed'},
+  {f:'Orlando',t:hubs.Newark.coords,n:'Newark',i:'KEWR',ac:'A320 / B737-800',col:'#37bbed'},
+  {f:'Orlando',t:hubs.Seattle.coords,n:'Seattle',i:'KSEA',ac:'A321 / B737-800',col:'#37bbed'},
+  {f:'Orlando',t:[34.0522,-118.2437],n:'Los Angeles',i:'KLAX',ac:'A321 / B737-800',col:'#37bbed'},
+  {f:'Orlando',t:[32.8998,-97.0403],n:'Dallas Fort Worth',i:'KDFW',ac:'B737-800 / A320',col:'#37bbed'},
+  {f:'Orlando',t:[43.6532,-79.3832],n:'Toronto',i:'CYYZ',ac:'A320 / A321',col:'#37bbed'},
+  {f:'Orlando',t:[41.9742,-87.9073],n:"Chicago O'Hare",i:'KORD',ac:'A320 / A321 / B737-800',col:'#37bbed'},
+  {f:'Newark',t:hubs.Orlando.coords,n:'Orlando',i:'KMCO',ac:'A320 / A321 / B737-800',col:'orange'},
+  {f:'Newark',t:hubs.Seattle.coords,n:'Seattle',i:'KSEA',ac:'A320 / A321',col:'orange'},
+  {f:'Newark',t:[41.9742,-87.9073],n:"Chicago O'Hare",i:'KORD',ac:'A320 / B737-800',col:'orange'},
+  {f:'Newark',t:[37.7749,-122.4194],n:'San Francisco',i:'KSFO',ac:'A321 / B737-800',col:'orange'},
+  {f:'Newark',t:[32.8998,-97.0403],n:'Dallas Fort Worth',i:'KDFW',ac:'A320 / B737-800',col:'orange'},
+  {f:'Seattle',t:[37.7749,-122.4194],n:'San Francisco',i:'KSFO',ac:'A320',col:'green'},
+  {f:'Seattle',t:[26.1224,-80.1373],n:'Fort Lauderdale',i:'KFLL',ac:'A321 / B737-800',col:'green'},
+  {f:'Seattle',t:[41.9742,-87.9073],n:"Chicago O'Hare",i:'KORD',ac:'A321 / B737-800',col:'green'}
 ];
-domRoutes.forEach(r=>{
-  L.marker(r.to,{icon:L.divIcon({className:'airport-marker'})}).addTo(map).bindPopup(`<b>${r.name}</b><br>ICAO: ${r.icao}<br>Aircraft: ${r.ac}`);
-  L.polyline([hubs[r.from].coords,r.to],{color:r.color,weight:2}).addTo(map);
+dom.forEach(r=>{
+  if(!Object.values(hubs).some(h=>h.coords[0]===r.t[0]&&h.coords[1]===r.t[1]))
+      L.marker(r.t,{icon:L.divIcon({className:'airport-marker'})})
+       .addTo(map).bindPopup(`<b>${r.n}</b><br>ICAO: ${r.i}<br>Aircraft: ${r.ac}`);
+  L.polyline([hubs[r.f].coords,r.t],{color:r.col,weight:2}).addTo(map);
 });
 
+/* purple trans‑atlantic / pacific / MX‑CA routes */
 const purple='purple';
-const longRoutes=[
-  {from:'Orlando',to:hubs.Dublin.coords,name:'Dublin',icao:'EIDW',ac:'A330-900neo / 787-9'},
-  {from:'Orlando',to:[21.1600,-86.8516],name:'Cancún',icao:'MMUN',ac:'A321 / 737-800'},
-  {from:'Orlando',to:[33.3675,-7.5899],name:'Casablanca',icao:'GMMN',ac:'A350-900 / 787-9'},
-  {from:'Orlando',to:[49.0097,2.5479],name:'Paris CDG',icao:'LFPG',ac:'A350-900 / A330-900neo'},
-  {from:'Orlando',to:hubs.Zurich.coords,name:'Zurich',icao:'LSZH',ac:'A350-900 / 787-9'},
-  {from:'Newark',to:hubs.Dublin.coords,name:'Dublin',icao:'EIDW',ac:'A350-900 / A330-900neo'},
-  {from:'Newark',to:hubs.Zurich.coords,name:'Zurich',icao:'LSZH',ac:'A330-900neo / A350-900 / 787-9'},
-  {from:'Newark',to:[33.3675,-7.5899],name:'Casablanca',icao:'GMMN',ac:'A330-900neo / 787-9'},
-  {from:'Newark',to:[32.6979,-16.7745],name:'Madeira',icao:'LPMA',ac:'A321'},
-  {from:'Seattle',to:[35.7720,140.3929],name:'Tokyo NRT',icao:'RJAA',ac:'A350-900 / 787-9'},
-  {from:'Seattle',to:[21.1600,-86.8516],name:'Cancún',icao:'MMUN',ac:'A321 / 737-800'},
-  {from:'Seattle',to:[19.4361,-99.0719],name:'Mexico City',icao:'MMMX',ac:'787-9 / A330-900neo'}
+const long=[
+  {f:'Orlando',t:hubs.Dublin.coords,n:'Dublin',i:'EIDW',ac:'A330-900neo / 787-9'},
+  {f:'Orlando',t:[21.1600,-86.8516],n:'Cancún',i:'MMUN',ac:'A321 / 737-800'},
+  {f:'Orlando',t:[33.3675,-7.5899],n:'Casablanca',i:'GMMN',ac:'A350-900 / 787-9'},
+  {f:'Orlando',t:[49.0097,2.5479],n:'Paris CDG',i:'LFPG',ac:'A350-900 / A330-900neo'},
+  {f:'Orlando',t:hubs.Zurich.coords,n:'Zurich',i:'LSZH',ac:'A350-900 / 787-9'},
+  {f:'Newark',t:hubs.Dublin.coords,n:'Dublin',i:'EIDW',ac:'A350-900 / A330-900neo'},
+  {f:'Newark',t:hubs.Zurich.coords,n:'Zurich',i:'LSZH',ac:'A330-900neo / A350-900 / 787-9'},
+  {f:'Newark',t:[33.3675,-7.5899],n:'Casablanca',i:'GMMN',ac:'A330-900neo / 787-9'},
+  {f:'Newark',t:[32.6979,-16.7745],n:'Madeira',i:'LPMA',ac:'A321'},
+  {f:'Seattle',t:[35.7720,140.3929],n:'Tokyo NRT',i:'RJAA',ac:'A350-900 / 787-9',waypoints:[[60,-160],[45,170]]},
+  {f:'Seattle',t:[21.1600,-86.8516],n:'Cancún',i:'MMUN',ac:'A321 / 737-800'},
+  {f:'Seattle',t:[19.4361,-99.0719],n:'Mexico City',i:'MMMX',ac:'787-9 / A330-900neo'}
 ];
-longRoutes.forEach(r=>{
-  L.marker(r.to,{icon:L.divIcon({className:'airport-marker'})}).addTo(map).bindPopup(`<b>${r.name}</b><br>ICAO: ${r.icao}<br>Aircraft: ${r.ac}`);
-  L.polyline([hubs[r.from].coords,r.to],{color:purple,weight:2}).addTo(map);
+long.forEach(r=>{
+  if(!Object.values(hubs).some(h=>h.coords[0]===r.t[0]&&h.coords[1]===r.t[1]))
+      L.marker(r.t,{icon:L.divIcon({className:'airport-marker'})})
+       .addTo(map).bindPopup(`<b>${r.n}</b><br>ICAO: ${r.i}<br>Aircraft: ${r.ac}`);
+  const path=[hubs[r.f].coords];
+  if(r.waypoints) path.push(...r.waypoints);
+  path.push(r.t);
+  L.polyline(path,{color:purple,weight:2}).addTo(map);
 });
 </script>
 </body>
 </html>
+```
